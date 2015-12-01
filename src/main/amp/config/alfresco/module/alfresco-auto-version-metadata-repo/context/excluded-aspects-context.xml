@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+    <bean id="versionableAspect" class="com.itdhq.metadataversioning.MetadataAutoVersioning" init-method="init">
+        <property name="policyComponent">
+            <ref bean="policyComponent" />
+        </property>
+        <property name="versionService">
+            <ref bean="versionService"/>
+        </property>
+        <property name="nodeService">
+            <ref bean="nodeService"/>
+        </property>
+        <property name="lockService" ref="lockService" />
+        <property name="dictionaryDAO">
+            <ref bean="dictionaryDAO"/>
+        </property>
+        <property name="namespacePrefixResolver">
+            <ref bean="namespaceService"/>
+        </property>
+        <property name="excludedOnUpdateProps">
+            <list>
+                <value>cm:modified</value>
+                <value>cm:author</value>
+            </list>
+        </property>
+        <property name="excludedOnUpdateAssocs">
+            <list>
+                <value>myc:assignee2</value>
+            </list>
+        </property>
+        <property name="excludedOnUpdateChildAssocs">
+            <list>
+            </list>
+        </property>
+        <property name="enableAutoVersioning" value="${version.store.enableAutoVersioning}" />
+        <property name="customAutoVersioning">
+            <value>${customAutoVersioning}</value>
+        </property>
+        <property name="autoVersionAssocs">
+            <value>${autoVersionAssocs}</value>
+        </property>
+    </bean>
+</beans>
