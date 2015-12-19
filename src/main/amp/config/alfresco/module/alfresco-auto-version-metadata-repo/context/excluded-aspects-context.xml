@@ -27,7 +27,6 @@
         </property>
         <property name="excludedOnUpdateAssocs">
             <list>
-                <value>myc:assignee2</value>
             </list>
         </property>
         <property name="excludedOnUpdateChildAssocs">

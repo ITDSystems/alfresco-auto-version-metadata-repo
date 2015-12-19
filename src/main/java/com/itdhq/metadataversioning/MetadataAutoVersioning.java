@@ -227,13 +227,10 @@ public class MetadataAutoVersioning
     }
 
     @Override
-    public void onCreateAssociation(AssociationRef associationRef) {
-        // TODO
+    public void onCreateAssociation(AssociationRef associationRef)
+    {
         NodeRef sourceAssocNode = associationRef.getSourceRef();
-        if ((this.nodeService.exists(sourceAssocNode) == true) &&
-                !LockUtils.isLockedAndReadOnly(sourceAssocNode, lockService) &&
-                (this.nodeService.hasAspect(sourceAssocNode, ContentModel.ASPECT_VERSIONABLE) == true) &&
-                (this.nodeService.hasAspect(sourceAssocNode, ContentModel.ASPECT_TEMPORARY) == false)) {
+        if (this.nodeService.exists(sourceAssocNode) == true) {
             boolean autoVersion = false;
             Boolean value = (Boolean) this.nodeService.getProperty(sourceAssocNode, ContentModel.PROP_AUTO_VERSION);
             if (value != null) {
@@ -252,13 +249,10 @@ public class MetadataAutoVersioning
     }
 
     @Override
-    public void onDeleteAssociation(AssociationRef associationRef) {
-        // TODO
+    public void onDeleteAssociation(AssociationRef associationRef)
+    {
         NodeRef sourceAssocNode = associationRef.getSourceRef();
-        if ((this.nodeService.exists(sourceAssocNode) == true) &&
-                !LockUtils.isLockedAndReadOnly(sourceAssocNode, lockService) &&
-                (this.nodeService.hasAspect(sourceAssocNode, ContentModel.ASPECT_VERSIONABLE) == true) &&
-                (this.nodeService.hasAspect(sourceAssocNode, ContentModel.ASPECT_TEMPORARY) == false)) {
+        if (this.nodeService.exists(sourceAssocNode) == true) {
             boolean autoVersion = false;
             Boolean value = (Boolean) this.nodeService.getProperty(sourceAssocNode, ContentModel.PROP_AUTO_VERSION);
             if (value != null) {
@@ -277,13 +271,10 @@ public class MetadataAutoVersioning
     }
 
     @Override
-    public void onCreateChildAssociation(ChildAssociationRef childAssociationRef, boolean b) {
-        // TODO
+    public void onCreateChildAssociation(ChildAssociationRef childAssociationRef, boolean b)
+    {
         NodeRef parentAssocNode = childAssociationRef.getParentRef();
-        if ((this.nodeService.exists(parentAssocNode) == true) &&
-                !LockUtils.isLockedAndReadOnly(parentAssocNode, lockService) &&
-                (this.nodeService.hasAspect(parentAssocNode, ContentModel.ASPECT_VERSIONABLE) == true) &&
-                (this.nodeService.hasAspect(parentAssocNode, ContentModel.ASPECT_TEMPORARY) == false)) {
+        if (this.nodeService.exists(parentAssocNode) == true) {
             boolean autoVersion = false;
             Boolean value = (Boolean) this.nodeService.getProperty(parentAssocNode, ContentModel.PROP_AUTO_VERSION);
             if (value != null) {
@@ -302,13 +293,10 @@ public class MetadataAutoVersioning
     }
 
     @Override
-    public void onDeleteChildAssociation(ChildAssociationRef childAssociationRef) {
-        // TODO
+    public void onDeleteChildAssociation(ChildAssociationRef childAssociationRef)
+    {
         NodeRef parentAssocNode = childAssociationRef.getParentRef();
-        if ((this.nodeService.exists(parentAssocNode) == true) &&
-                !LockUtils.isLockedAndReadOnly(parentAssocNode, lockService) &&
-                (this.nodeService.hasAspect(parentAssocNode, ContentModel.ASPECT_VERSIONABLE) == true) &&
-                (this.nodeService.hasAspect(parentAssocNode, ContentModel.ASPECT_TEMPORARY) == false)) {
+        if (this.nodeService.exists(parentAssocNode) == true) {
             boolean autoVersion = false;
             Boolean value = (Boolean) this.nodeService.getProperty(parentAssocNode, ContentModel.PROP_AUTO_VERSION);
             if (value != null) {
@@ -552,8 +540,8 @@ public class MetadataAutoVersioning
                         autoVersionProps = value.booleanValue();
                     }
 
-                    // TODO Not perfect - old politics could autoversion only props
-                    if ((autoVersionProps == true) && (autoVersion == true))
+                    // TODO Not perfect - old politics could autoversion only props (check)
+                    if ((autoVersionProps == true) && (autoVersion == true) && (true == customAutoVersioning))
                     {
                         logger.info("OK, at least i'm trying!");
                         // logger.info("Before : " + before.toString());
@@ -562,38 +550,45 @@ public class MetadataAutoVersioning
                         if (excludedOnUpdatePropQNames.size() > 0)
                         {
                             // From here its mine
-                            if (customAutoVersioning) {
-                                if (findDiffProps(before, after) == 0) {
-                                    return ;
-                                }
-                            } else {
-                                Set<QName> propNames = new HashSet<>();
-                                propNames.addAll(after.keySet());
-                                propNames.addAll(before.keySet());
-                                propNames.retainAll(excludedOnUpdatePropQNames);
-
-                                if (propNames.size() > 0) {
-                                    for (QName prop : propNames) {
-                                        Serializable beforeValue = before.get(prop);
-                                        Serializable afterValue = after.get(prop);
-
-                                        if (EqualsHelper.nullSafeEquals(beforeValue, afterValue) != true) {
-                                            return;
-                                        }
-                                    }
-                                }
+                            if (findDiffProps(before, after) == 0) {
+                                return;
                             }
                             // To here
                             // drop through and auto-version
                         }
-
                         // Create the auto-version
                         Map<String, Serializable> versionProperties = new HashMap<String, Serializable>(4);
                         versionProperties.put(Version.PROP_DESCRIPTION, I18NUtil.getMessage(MSG_AUTO_VERSION_PROPS));
                         versionProperties.put(VersionModel.PROP_VERSION_TYPE, VersionType.MINOR);
 
                         createVersionImpl(nodeRef, versionProperties);
+                    } else
+                    if ((autoVersionProps == true) && (false == customAutoVersioning))
+                    {
+                        Set<QName> propNames = new HashSet<>();
+                        propNames.addAll(after.keySet());
+                        propNames.addAll(before.keySet());
+                        propNames.retainAll(excludedOnUpdatePropQNames);
+
+                        if (propNames.size() > 0) {
+                            for (QName prop : propNames) {
+                                Serializable beforeValue = before.get(prop);
+                                Serializable afterValue = after.get(prop);
+
+                                if (EqualsHelper.nullSafeEquals(beforeValue, afterValue) != true) {
+                                    return;
+                                }
+                            }
+                        }
                     }
+
+                    // Create the auto-version
+                    Map<String, Serializable> versionProperties = new HashMap<String, Serializable>(4);
+                    versionProperties.put(Version.PROP_DESCRIPTION, I18NUtil.getMessage(MSG_AUTO_VERSION_PROPS));
+                    versionProperties.put(VersionModel.PROP_VERSION_TYPE, VersionType.MINOR);
+
+                    createVersionImpl(nodeRef, versionProperties);
+
                 }
             }
             finally
