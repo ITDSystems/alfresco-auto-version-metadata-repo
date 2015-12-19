@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.itdhq</groupId>
     <artifactId>alfresco-auto-version-metadata-repo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>alfresco-auto-version-metadata-repo Repository AMP project</name>
     <packaging>amp</packaging>
     <description>Manages the lifecycle of the alfresco-auto-version-metadata-repo Repository AMP (Alfresco Module Package)</description>
