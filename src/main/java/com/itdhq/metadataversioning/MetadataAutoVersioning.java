@@ -113,7 +113,6 @@ public class MetadataAutoVersioning
     public void setExcludedOnUpdateProps(List<String> excludedOnUpdateProps)
     {
         this.excludedOnUpdateProps = Collections.unmodifiableList(excludedOnUpdateProps);
-        logger.info("Excluded aspects : " + this.excludedOnUpdateProps.toString());
     }
 
     public List<String> getExcludedOnUpdateAssocs() { return excludedOnUpdateAssocs; }
@@ -121,7 +120,6 @@ public class MetadataAutoVersioning
     public void setExcludedOnUpdateAssocs(List<String> excludedOnUpdateAssocs)
     {
         this.excludedOnUpdateAssocs = Collections.unmodifiableList(excludedOnUpdateAssocs);
-        logger.info("Excluded aspects : " + this.excludedOnUpdateAssocs.toString());
     }
 
     public List<String> getExcludedOnUpdateChildAssocs() { return excludedOnUpdateChildAssocs; }
@@ -129,7 +127,6 @@ public class MetadataAutoVersioning
     public void setExcludedOnUpdateChildAssocs(List<String> excludedOnUpdateChildAssocs)
     {
         this.excludedOnUpdateChildAssocs = Collections.unmodifiableList(excludedOnUpdateChildAssocs);
-        logger.info("Excluded aspects : " + this.excludedOnUpdateChildAssocs.toString());
     }
 
     /**
@@ -138,10 +135,12 @@ public class MetadataAutoVersioning
     public void init()
     {
         if (!enableAutoVersioning) {
-            logger.info("I'm MetadataAutoVersioning extension and i won't work because 'enableAutoVersioning' property set to false!");
+            logger.debug("I'm MetadataAutoVersioning extension and i wouldn't work because 'enableAutoVersioning' property set to false!");
             return;
         }
-        logger.info("I'm MetadataAutoVersioning extension!");
+        logger.debug("MetadataAutoVersioning extension is online!");
+        logger.debug("Working in :" + (customAutoVersioning ? "custom AutoVersion" : "default AutoVersion") + " mode.");
+
         this.policyComponent.bindClassBehaviour(
                 QName.createQName(NamespaceService.ALFRESCO_URI, "beforeAddAspect"),
                 ContentModel.ASPECT_VERSIONABLE,
@@ -316,16 +315,14 @@ public class MetadataAutoVersioning
 
     private void associationAutoVersioning(NodeRef assocNode)
     {
+
         VersionHistory versionHistory = versionService.getVersionHistory(assocNode);
         Version lastVersion = versionHistory.getHeadVersion();
-        logger.info("Catch it!");
         Date now = new Date();
         Date versionCreated = (Date) lastVersion.getVersionProperty("created");
-        long diffSecs = (now.getTime() - versionCreated.getTime()) / 1000 % 60;
-        logger.info(now.toString() +  " \ntype :" + now.getClass().toString());
-        logger.info(lastVersion.getVersionProperty("created").toString() + " \ntype :" + lastVersion.getVersionProperty("created").getClass().toString());
+        double diffSecs = (now.getTime() - versionCreated.getTime()) / 1000 / 60;
         if (diffSecs > autoAssociationDelay) {
-            logger.info("Creating assoc version");
+            logger.debug("Updating version on association : " + assocNode.getId().toString());
             // Create the auto-version
             Map<String, Serializable> versionProperties = new HashMap<String, Serializable>(4);
             versionProperties.put(Version.PROP_DESCRIPTION, I18NUtil.getMessage(MSG_AUTO_VERSION_PROPS));
@@ -515,7 +512,7 @@ public class MetadataAutoVersioning
                 (this.nodeService.hasAspect(nodeRef, ContentModel.ASPECT_VERSIONABLE) == true) &&
                 (this.nodeService.hasAspect(nodeRef, ContentModel.ASPECT_TEMPORARY) == false))
         {
-            logger.info("Updating properties...");
+            logger.debug("onUpdateProperties");
             onUpdatePropertiesBehaviour.disable();
             try
             {
@@ -543,7 +540,7 @@ public class MetadataAutoVersioning
                     // TODO Not perfect - old politics could autoversion only props (check)
                     if ((autoVersionProps == true) && (autoVersion == true) && (true == customAutoVersioning))
                     {
-                        logger.info("OK, at least i'm trying!");
+                        logger.debug("Custom versioning.");
                         // logger.info("Before : " + before.toString());
                         // logger.info("After : " + after.toString());
                         // Check for explicitly excluded props - if one or more excluded props changes then do not auto-version on this event (even if other props changed)
@@ -565,6 +562,7 @@ public class MetadataAutoVersioning
                     } else
                     if ((autoVersionProps == true) && (false == customAutoVersioning))
                     {
+                        logger.debug("Default versioning.");
                         Set<QName> propNames = new HashSet<>();
                         propNames.addAll(after.keySet());
                         propNames.addAll(before.keySet());
