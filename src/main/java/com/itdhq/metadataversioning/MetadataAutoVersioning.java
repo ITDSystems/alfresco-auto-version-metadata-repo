@@ -81,7 +81,7 @@ public class MetadataAutoVersioning
     private boolean customAutoVersioning;
     private boolean autoVersionAssocs;
     private boolean autoVersionChildAssocs;
-    private long autoAssociationDelay;
+    private double autoAssociationDelay;
     JavaBehaviour onUpdatePropertiesBehaviour;
 
     /**
@@ -107,7 +107,7 @@ public class MetadataAutoVersioning
     public void setCustomAutoVersioning(boolean customAutoVersioning) { this.customAutoVersioning = customAutoVersioning; }
     public void setAutoVersionAssocs(boolean autoVersionAssocs) { this.autoVersionAssocs = autoVersionAssocs; }
     public void setAutoVersionChildAssocs(boolean autoVersionChildAssocs) { this.autoVersionChildAssocs = autoVersionChildAssocs; }
-    public void setAutoAssociationDelay(long autoAssociationDelay) { this.autoAssociationDelay = autoAssociationDelay; }
+    public void setAutoAssociationDelay(double autoAssociationDelay) { this.autoAssociationDelay = autoAssociationDelay; }
     public List<String> getExcludedOnUpdateProps() { return excludedOnUpdateProps; }
 
     public void setExcludedOnUpdateProps(List<String> excludedOnUpdateProps)
