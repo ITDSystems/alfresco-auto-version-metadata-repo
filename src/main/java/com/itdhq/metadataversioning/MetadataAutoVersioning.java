@@ -139,7 +139,8 @@ public class MetadataAutoVersioning
             return;
         }
         logger.debug("MetadataAutoVersioning extension is online!");
-        logger.debug("Working in :" + (customAutoVersioning ? "custom AutoVersion" : "default AutoVersion") + " mode.");
+        logger.debug("Working in " +
+                "" + (customAutoVersioning ? "custom AutoVersion" : "default AutoVersion") + " mode.");
 
         this.policyComponent.bindClassBehaviour(
                 QName.createQName(NamespaceService.ALFRESCO_URI, "beforeAddAspect"),

@@ -1,5 +1,5 @@
 # alfresco-auto-version-metadata-repo
-Extension adds aspect that contents in asoosciation all user that marked this document as favorite.
+Extension adds aspect that contents in asociation all user that marked this document as favorite.
 
 ## v0.5
 
