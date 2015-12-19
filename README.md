@@ -19,8 +19,9 @@ Soon
 * Refactoring at some moment
 
 ### Usage
-All preferences could be set in **alfresco-globa.properties**
-Supported flags^
+All preferences could be set in **alfresco-global.properties**
+
+Supported flags:
 
 * **customAutoVersioning** boolean - enables custom behavior
 
