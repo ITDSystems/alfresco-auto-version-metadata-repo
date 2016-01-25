@@ -229,6 +229,7 @@ public class MetadataAutoVersioning
     @Override
     public void onCreateAssociation(AssociationRef associationRef)
     {
+        logger.debug("onCreateAssociation");
         NodeRef sourceAssocNode = associationRef.getSourceRef();
         if (this.nodeService.exists(sourceAssocNode) == true) {
             boolean autoVersion = false;
@@ -251,6 +252,7 @@ public class MetadataAutoVersioning
     @Override
     public void onDeleteAssociation(AssociationRef associationRef)
     {
+        logger.debug("onDeleteAssociation");
         NodeRef sourceAssocNode = associationRef.getSourceRef();
         if (this.nodeService.exists(sourceAssocNode) == true) {
             boolean autoVersion = false;
@@ -325,7 +327,7 @@ public class MetadataAutoVersioning
         if (diffSecs > autoAssociationDelay) {
             logger.debug("Updating version on association : " + assocNode.getId().toString());
             // Create the auto-version
-            Map<String, Serializable> versionProperties = new HashMap<String, Serializable>(4);
+            Map<String, Serializable> versionProperties = new HashMap<>(4);
             versionProperties.put(Version.PROP_DESCRIPTION, I18NUtil.getMessage(MSG_AUTO_VERSION_PROPS));
             versionProperties.put(VersionModel.PROP_VERSION_TYPE, VersionType.MINOR);
 
@@ -357,7 +359,7 @@ public class MetadataAutoVersioning
 
             if ((value1 != null) || (value2 != null))
             {
-                Map<QName, Serializable> newProperties = new HashMap<QName, Serializable>(2);
+                Map<QName, Serializable> newProperties = new HashMap<>(2);
 
                 if (value1 != null)
                 {
