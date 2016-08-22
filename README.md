@@ -1,6 +1,5 @@
 # alfresco-auto-version-metadata-repo
-Extension adds aspect that contents in asociation all user that marked this document as favorite.
-
+Extension adds alternate configurable autoversion politics.
 ## v0.5
 
 ### DONE
@@ -21,7 +20,7 @@ Soon
 ### Usage
 All preferences could be set in **alfresco-global.properties**
 
-Supported flags:
+Supported flags
 
 * **customAutoVersioning** boolean - enables custom behavior
 
